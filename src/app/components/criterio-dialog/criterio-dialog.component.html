@@ -1,0 +1,192 @@
+<h2 mat-dialog-title class="relative" id="big-dialog">
+    <span>
+        <span>{{title}}</span>
+        @if (startMode == 'edit') {
+            <span class="font-bold italic"> #{{data.criterioToEdit?.id}}</span>
+        }
+    </span>
+
+    <div class="absolute top-1/2 -translate-y-1/2 right-[5px] flex items-center dense-2 gap-4">
+        <button class="opacity-0" tabindex="-1" cdkFocusInitial></button>
+        @if (authService.isAdmin && startMode == 'edit') {
+            <mat-slide-toggle class="text-xs" (change)="changeMode()">{{data.mode == 'edit' ? 'Modifica' : 'Duplica'}}</mat-slide-toggle>
+            <button mat-icon-button color="warn" (click)="openDeleteDialog()" tabindex="-1" matTooltip="Elimina Criterio" [disabled]="!data.criterioToEdit?.isDeletable">
+                <mat-icon>delete</mat-icon>
+            </button>
+        }
+    </div>
+</h2>
+<mat-dialog-content class="mat-typography" cdkScrollable>
+    @if(authService.isAdmin) {
+    <form class="flex flex-col flex-wrap gap-6 relative">
+        <div id="separator" class="sticky w-full h-[3px] bg-black left-0 top-0 content-[''] z-10 dark:bg-white">
+        </div>
+
+        <div class="grid grid-cols-21 relative pt-7">
+            <div class="absolute top-0 right-0 flex justify-end">
+                <span class="text-xs italic">Campi del Criterio</span>
+            </div>
+
+            <div class="col-span-10">
+                <mat-form-field class="w-full">
+                    <mat-label>Descrizione Criterio</mat-label>
+                    <textarea #inputDescCriterio matInput placeholder="Descrizione Criterio..." [formControl]="formGroup.controls.descCriterio" style="height: 20px;" (keyup.control.space)="addTab(inputDescCriterio, formGroup.controls.descCriterio)"></textarea>
+                    @if (descCriterioInputError.hasError) {
+                    <mat-error class="text-sm">{{descCriterioInputError.message}}</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-start-12 col-span-10">
+                <mat-form-field class="w-full">
+                    <mat-label>Dettaglio Criterio</mat-label>
+                    <textarea #inputDettaglioCriterio matInput placeholder="Dettaglio Criterio..." [formControl]="formGroup.controls.dettaglioCriterio" style="height: 20px;" (keyup.control.space)="addTab(inputDettaglioCriterio, formGroup.controls.dettaglioCriterio)"></textarea>
+                    @if (dettaglioCriterioInputError.hasError) {
+                    <mat-error class="text-sm">{{dettaglioCriterioInputError.message}}</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-21 pt-7">
+
+            <div class="col-span-10">
+                <mat-form-field class="w-full">
+                    <mat-label>Seleziona Tipo Criterio</mat-label>
+                    <input #inputTipoCriterio type="text" placeholder="Tipo Criterio..." matInput [formControl]="formGroup.controls.tipoCriterio" [matAutocomplete]="autoTipoCriterio" (keydown.enter)="$event.preventDefault()" (keydown.shift.enter)="$event.preventDefault()" (keyup.control.space)="addTab(inputTipoCriterio, formGroup.controls.tipoCriterio)">
+                    @if (tipoCriterioInputError.hasError) {
+                    <mat-error class="text-sm">{{tipoCriterioInputError.message}}</mat-error>
+                    }
+                    <mat-autocomplete #autoTipoCriterio="matAutocomplete">
+                        @for (option of tipoCriterioFilteredOptions | async; track option) {
+                        <mat-option [value]="option">{{option}}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="grid grid-cols-21 relative pb-4" [class]="{'pt-12': kpiOrigineOpened, 'pt-4': !kpiOrigineOpened}">
+            <div class="absolute top-[-12px] left-0 dense-2 flex items-center gap-4">
+                <button mat-icon-button (click)="kpiOrigineOpened = !kpiOrigineOpened" [matTooltip]="kpiOrigineOpened ? 'Comprimi' : 'Espandi'">
+                    <mat-icon>{{kpiOrigineOpened ? 'unfold_less' : 'open_in_full'}}</mat-icon>
+                </button>
+
+                <span>{{selectedKpiOrigineOptions.length}} {{selectedKpiOrigineOptions.length == 1 ? 'Kpi Origine selezionato' : 'Kpi Origine selezionati'}}</span>
+            </div>
+            <div class="absolute top-0 right-0 flex justify-end">
+                <span class="text-xs italic">Kpi Origine</span>
+            </div>
+
+            @if (kpiOrigineOpened) {
+                <div class="col-span-10">
+                    @for (kpiOrigine of filteredKpiOrigineCheckboxes; track $index) {
+                        <div class="dense-2">
+                            <span class="ps-5"></span>
+                            <mat-checkbox [checked]="kpiOrigine.checked" (change)="checkKpiOrigine($event, kpiOrigine.name)" class="al-grid-checkbox">
+                                <div class="grid grid-cols-40 w-full">
+                                    <div class="col-span-3 flex justify-center items-center pe-3 text-xs">
+                                        {{kpiOrigine.extractedId}}
+                                    </div>
+
+                                    <div class="col-span-37 text-sm">
+                                        {{kpiOrigine.extractedName}}
+                                    </div>
+                                </div>
+                            </mat-checkbox>
+                        </div>  
+                    }
+                </div>
+    
+                <div class="col-start-12 col-span-10">
+                    <mat-form-field class="w-full">
+                        <mat-label>Filtra Kpi Origine</mat-label>
+                        <input #inputKpiOrigine type="text" placeholder="Kpi Origine..." matInput [formControl]="formGroupMulti.controls.kpiOrigine" [matAutocomplete]="autoKpiOrigine" (keydown.shift.enter)="$event.preventDefault()" (keyup.control.space)="addTab(inputKpiOrigine, formGroupMulti.controls.kpiOrigine)" (ngModelChange)="filterKpiOrigineCheckboxes()">
+                        <mat-autocomplete #autoKpiOrigine="matAutocomplete">
+                            @for (option of kpiOrigineFilteredOptions | async; track option) {
+                            <mat-option [value]="option">{{option}}</mat-option>
+                            }
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <div class="font-bold pt-5">Selezionati</div>
+                    @if (selectedKpiOrigineOptions.length < 1) {
+                        <span class="text-sm italic ps-4">Nessuno...</span>
+                    }
+
+                    @for (kpiOrigineName of selectedKpiOrigineOptions; track $index) {
+                    <div class="dense-5 flex items-center gap-2 text-sm">
+                        <button mat-icon-button (click)="deselectKpiOrigineFromHTML(kpiOrigineName)" [disabled]="!authService.isAdmin" tabindex="-1">
+                            <mat-icon>remove</mat-icon>
+                        </button>
+    
+                        <span>{{ kpiOrigineName }}</span>
+                    </div>
+                    }
+                </div>
+            }
+ 
+        </div>
+    </form>
+    } @else {
+        <div class="flex flex-col gap-4 relative">
+            <div id="separator" class="sticky w-full h-[3px] bg-black left-0 top-0 content-[''] z-10 dark:bg-white"></div>
+
+            <div>
+                <div class="text-xs italic font-bold">Descrizione Criterio</div>
+                <div class="pt-1">{{ data.criterioToEdit?.descCriterio ? data.criterioToEdit?.descCriterio : '(Nessun Valore)' }}</div>
+            </div>
+
+            <hr>
+
+            <div>
+                <div class="text-xs italic font-bold">Dettaglio Criterio</div>
+                <div class="pt-1">{{ data.criterioToEdit?.dettaglioCriterio ? data.criterioToEdit?.dettaglioCriterio : '(Nessun Valore)' }}</div>
+            </div>
+
+            <hr>
+
+            <div>
+                <div class="text-xs italic font-bold">Tipo Criterio</div>
+                <div class="pt-1">{{ data.criterioToEdit?.tipoCriterio ? data.criterioToEdit?.tipoCriterio : '(Nessun Valore)' }}</div>
+            </div>
+
+            <hr>
+
+            <div>
+                <div class="text-xs italic font-bold">Kpi Origine</div>
+                <div class="pt-1">
+                    @if (initialSelectedKpiOrigineOptions.length < 1) {
+                        <div>(Nessun Valore)</div>
+                    } @else {
+                        @for (item of initialSelectedKpiOrigineOptions; track $index) {
+                            <div class="flex">
+                                <div class="w-4"></div>
+                                <div>- {{item}}</div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="relative">
+    <div class="absolute left-[10px] top-0 flex items-center">
+        @if (authService.isAdmin) {
+        <button mat-icon-button (click)="resetForm()" matTooltip="Ripristina il form" [disabled]="data.mode != 'create' && data.mode != 'edit'" tabindex="-1">
+            <mat-icon class="text-black dark:text-white">refresh</mat-icon>
+        </button>
+        }
+    </div>
+    <button mat-button mat-dialog-close tabindex="-1">{{authService.isAdmin ? 'Annulla' : 'Esci'}}</button>
+    @if (authService.isAdmin && data.mode == 'create') {
+    <button mat-raised-button color="primary" (click)="create()" [disabled]="formGroup.invalid">{{startMode == 'create' ? 'Crea' : 'Duplica'}}</button>
+    } @else if (authService.isAdmin && data.mode == 'edit') {
+    <button mat-raised-button color="accent" (click)="edit()" [disabled]="formGroup.invalid || !editFormChanged">Modifica</button>
+    }
+</mat-dialog-actions>

@@ -1,0 +1,28 @@
+  @import "../../../scss/mixins.scss";
+
+  @include mat-table-columns((
+    
+  id: (),
+  tipoOggetto: (),
+  tipoReport: (),
+  nomeReport: (),
+  descReport: (),
+  pathReport: (),
+  kpi: (maxWidth: 500px),
+  canale: (maxWidth: 500px),
+  piattaforma: (maxWidth: 500px),
+  link: (maxWidth: 400px),
+  listaDataset: (minWidth: 270px, maxWidth: 500px),
+  utenteInserimento: (),
+  dataInserimento: (),
+  utenteAggiornamento: (),
+  dataAggiornamento: ()
+));
+
+.text-shadow-hover span {
+    transition: text-shadow 300ms linear; 
+}
+
+.text-shadow-hover:hover span {
+    text-shadow: -0.06ex 0 0 currentColor, 0.06ex 0 0 currentColor;
+}

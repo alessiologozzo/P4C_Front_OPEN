@@ -1,0 +1,87 @@
+.custom-height {
+    height: calc(100vh - var(--toolbar_height) - var(--vertical_padding) - 200px);
+}
+
+@property --num-report {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+}
+
+@property --num-kpi {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+}
+
+@property --num-criterio {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+}
+
+.counter-report-animation {
+    animation: report-counter 3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    counter-reset: num-report var(--num-report);
+    animation-fill-mode: forwards;
+    font: 800 50px system-ui;
+    // padding: 2rem;
+}
+
+.counter-report-animation::after {
+    content: counter(num-report);
+}
+
+.counter-kpi-animation {
+    animation: kpi-counter 4.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    counter-reset: num-kpi var(--num-kpi);
+    animation-fill-mode: forwards;
+    font: 800 50px system-ui;
+    // padding: 2rem;
+}
+
+.counter-kpi-animation::after {
+    content: counter(num-kpi);
+}
+
+.counter-criterio-animation {
+    animation: criterio-counter 6s cubic-bezier(0.075, 0.82, 0.165, 1);
+    counter-reset: num-criterio var(--num-criterio);
+    animation-fill-mode: forwards;
+    font: 800 50px system-ui;
+    // padding: 2rem;
+}
+
+.counter-criterio-animation::after {
+    content: counter(num-criterio);
+}
+
+@keyframes report-counter {
+    from {
+        --num-report: 0;
+    }
+
+    to {
+        --num-report: var(--report_total);
+    }
+}
+
+@keyframes kpi-counter {
+    from {
+        --num-kpi: 0;
+    }
+
+    to {
+        --num-kpi: var(--kpi_total);
+    }
+}
+
+@keyframes criterio-counter {
+    from {
+        --num-criterio: 0;
+    }
+
+    to {
+        --num-criterio: var(--criterio_total);
+    }
+}

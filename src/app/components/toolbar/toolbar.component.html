@@ -1,0 +1,58 @@
+<mat-toolbar color="primary" class="flex justify-between al-toolbar-h">
+    <div class="flex">
+        <div class="flex items-center">
+            <img [ngSrc]="'assets/images/logo.png'" width="121" height="30" priority alt="logo">
+        </div>
+        <div class="mx-4">
+            <div class="al-divider"></div>
+        </div>
+        <div class="md:hidden">
+            <button mat-icon-button [mat-menu-trigger-for]="menuToolbar">
+                <mat-icon>menu</mat-icon>
+
+                <mat-menu #menuToolbar="matMenu">
+                    <button mat-menu-item routerLink="main">
+                        <span>Dashboard</span>
+                    </button>
+                    <button mat-menu-item routerLink="main/report">
+                        <span>Report</span>
+                    </button>
+                    <button mat-menu-item routerLink="main/kpi">
+                        <span>Kpi</span>
+                    </button>
+                    <button mat-menu-item routerLink="main/criteri">
+                        <span>Criteri</span>
+                    </button>
+                </mat-menu>
+            </button>
+        </div>
+        <div class="hidden md:block">
+            <nav mat-tab-nav-bar backgroundColor="primary" [tabPanel]="tabPanel">
+                <a mat-tab-link routerLink="main">Dashboard</a>
+                <a mat-tab-link routerLink="main/report">Report</a>
+                <a mat-tab-link routerLink="main/kpi">Kpi</a>
+                <a mat-tab-link routerLink="main/criteri">Criteri</a>
+            </nav>
+            <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-5">
+        @if (authService.isAdmin) {
+            <div class="dense-1 text-sm">
+                <button mat-raised-button color="accent" class="flex items-center justify-between" (click)="downloadCsv()" tabindex="-1">
+                    <mat-icon>download</mat-icon>
+                    <span>Esporta</span>
+                </button>
+            </div>
+        }
+
+        <button mat-icon-button (click)="themeService.switchTheme()" matTooltip="Cambia tema" matTooltipClass="text-sm" tabindex="-1">
+            @if (themeService.theme == themeService.LIGHT) {
+            <mat-icon class="text-yellow-400">light_mode</mat-icon>
+            } @else {
+            <mat-icon class="text-yellow-200">mode_night</mat-icon>
+            }
+        </button>
+    </div>
+</mat-toolbar>

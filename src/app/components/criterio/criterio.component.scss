@@ -1,0 +1,14 @@
+@import "../../../scss/mixins.scss";
+
+@include mat-table-columns((
+  
+id: (),
+descCriterio: (maxWidth: 500px),
+dettaglioCriterio: (maxWidth: 600px),
+tipoCriterio: (),
+kpiOrigine: (),
+utenteInserimento: (),
+dataInserimento: (),
+utenteAggiornamento: (),
+dataAggiornamento: ()
+));

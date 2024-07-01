@@ -1,0 +1,16 @@
+.al-py {
+    padding-top: var(--vertical_padding);
+    padding-bottom: var(--vertical_padding);
+}
+
+.al-px {
+    padding-left: var(--horizontal_padding);
+    padding-right: var(--horizontal_padding);
+}
+
+@media screen and (min-width: 768px) {
+    .al-px {
+        padding-left: var(--horizontal_padding_md);
+        padding-right: var(--horizontal_padding_md);
+    }
+}

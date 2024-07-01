@@ -1,0 +1,20 @@
+<div>
+    <div class="absolute top-[2px] left-0 w-full h-[25px] flex justify-between items-center ps-2">
+        <div class="flex items-center gap-2">
+            <div class="w-[15px] h-[15px] rounded-md" [class]="{'bg-green-600': data.result == 'success' , 'bg-red-600': data.result == 'fail', 'bg-cyan-600': data.result == 'info'}"></div>
+            <span>Dizionario P4C</span>
+        </div>
+        <div class="dense-5">
+            <button (click)="snackBarRef.dismissWithAction()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="absolute bottom-[-2px] left-0 w-full">
+            <hr class="border-[white] opacity-25 dark:border-[black]">
+        </div>
+    </div>
+    <div class="pt-[28px] text-sm">
+        {{ data.message }}
+    </div>
+
+</div>

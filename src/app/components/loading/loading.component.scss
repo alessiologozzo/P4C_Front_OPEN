@@ -1,0 +1,19 @@
+.custom-fade-in {
+    animation: fade-in-animation 500ms linear;
+}
+
+@keyframes fade-in-animation {
+    0% {
+        opacity: 0;
+    }
+    60% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.custom-height {
+    height: calc(100vh - var(--toolbar_height) - (var(--vertical_padding) * 2));
+}

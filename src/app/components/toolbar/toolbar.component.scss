@@ -1,0 +1,10 @@
+.al-toolbar-h {
+    height: var(--toolbar_height);
+}
+
+.al-divider {
+    height: calc(var(--toolbar_height) - 18px);
+    width: 1px;
+    background-color: currentColor;
+    opacity: 0.5;
+}

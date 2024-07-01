@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="p-14">
+    <span>
+        <span>{{ data.title }}</span>
+        @if (data.titleBold) {
+            <span class="font-bold italic"> {{data.titleBold}}</span>
+        }
+    </span>
+
+    <button class="opacity-0" tabIndex="-1" cdkFocusInitial></button>
+</h2>
+<mat-dialog-content class="mat-typography min-w-[500px]">
+    <p class="pt-2">{{ data.message }}</p>
+    @if (data.secondMessage) {
+        <p>{{ data.secondMessage }}</p>
+    }
+    @if (data.list && data.list.length > 0) {
+        <div class="pt-1">
+            @for (item of data.list; track $index) {
+                <div class="ps-4 italic flex gap-1">
+                    <span class="font-extrabold">-</span>
+                    <span>{{ item }}</span>
+                </div>
+            }
+        </div>
+    }
+    @if (data.finalMessage) {
+        <div [class]="{'pt-7': data.list}">{{data.finalMessage}}</div>
+    }
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="dense-2 pt-5">
+    <button mat-button mat-dialog-close>Annulla</button>
+    <button mat-raised-button [color]="data.okButtonColor" (click)="dialogRef.close('ok')">{{ data.okButtonText }}</button>
+</mat-dialog-actions>
